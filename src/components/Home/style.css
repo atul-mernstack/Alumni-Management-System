@@ -1,0 +1,10 @@
+.text-size{
+    font-size: x-large;
+    font-weight: bold;
+    font-style: italic;
+}
+
+.row-height{
+    height: 30px;
+    background-color: darkgray;
+}

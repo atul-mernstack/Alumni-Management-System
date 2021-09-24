@@ -1,0 +1,4 @@
+const USERNAME='USERNAME';
+const ISADMIN='ISADMIN';
+
+export default{USERNAME,ISADMIN};
