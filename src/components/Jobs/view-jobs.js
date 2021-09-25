@@ -1,13 +1,21 @@
 import { useEffect, useState } from "react";
-
+import ApiService from '../../service/ApiService';
+import {useSelector} from 'react-redux';
 const ViewJobs = () => {
-    const [jobs, setJobs] = useState([{
-        "JobsId": 123, "Alumni_Id": 123, "Alumni_Name": "Abcd", "JobsTitle": "Application Developer",
-        "Jobs_Description": "csfbjssjdnisdnsmc jksndac xnck", "Course": "Cs","Date":"22/09/2021"
-    }]);
+    const [jobs, setJobs] = useState([]);
 
     useEffect(()=>{
-        //api call for view jobs
+        ApiService.fetchJobs()
+            .then(resp => {
+                console.log(resp.data);//actual response data sent by back end
+                setJobs([resp.data]);                
+            }).catch(err => {
+                //  console.error(err);
+                console.error("in err ", err.response.data);
+                //err.response.data => DTO on the server side : ErrorResponse
+                alert(err.response.data.message);             
+                //history.push('register');
+            },[])
     });
 
     return (
@@ -21,12 +29,9 @@ const ViewJobs = () => {
                                 <thead>
                                     <tr>
                                         <th scope="col">Sr No.</th>
-                                        <th scope="col">Jobs Id</th>
-                                        <th scope="col">Alumni Id</th>
-                                        <th scope="col">Alumni Name</th>
+                                        <th scope="col">Jobs Id</th>                                        
                                         <th scope="col">Jobs Title</th>
-                                        <th scope="col">Jobs Description</th>
-                                        <th scope="col">Course</th>
+                                        <th scope="col">Jobs Description</th>                                        
                                         <th scope="col">Date</th>
                                         
                                     </tr>
@@ -36,14 +41,10 @@ const ViewJobs = () => {
                                         return(
                                             <tr key={index+1}>
                                         <th scope="row">{index+1}</th>
-                                        <td>{value.JobsId}</td>
-                                        <td>{value.Alumni_Id}</td>
-                                        <td>{value.Alumni_Name}</td>
-                                        <td>{value.JobsTitle}</td>
-                                        <td>{value.Jobs_Description}</td>
-                                        <td>{value.Course}</td>
-                                        <td>{value.Date}</td>
-                                        
+                                        <td>{value.id}</td>
+                                        <td>{value.title}</td>
+                                        <td>{value.jobDescription}</td>
+                                        <td>{value.postedOn}</td>                                       
                                     </tr>
                                         );
                                     }

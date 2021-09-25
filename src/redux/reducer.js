@@ -3,7 +3,8 @@ import ActionType from './actionType';
 
 const initialState={
     username:'',
-    isAdmin:false
+    isAdmin:false,
+    alumniid:''
 }
 
 const Reducer=(state=initialState, action)=>{
@@ -15,6 +16,10 @@ const Reducer=(state=initialState, action)=>{
         case ActionType.ISADMIN:return{
             ...state,
             isAdmin:action.payload
+        }
+        case ActionType.ALUMNIID:return{
+            ...state,
+            alumniid:action.payload
         }
         default:return state;
     }

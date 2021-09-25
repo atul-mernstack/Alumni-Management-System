@@ -13,3 +13,10 @@ export const isAdmin=(inputValue=false)=>{
         payload:inputValue
     }
 }
+
+export const alumniid=(inputValue="")=>{
+    return{
+        type:ActionTypes.ALUMNIID,
+        payload:inputValue
+    }
+}

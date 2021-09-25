@@ -1,23 +1,31 @@
 import axios from 'axios';
 
-const USER_API_BASE_URL = 'http://localhost:8080/users';
+const USER_API_BASE_URL = 'http://localhost:8080/';
 
 class ApiService {
 
     addUser(alumni) {
-        return axios.post(""+USER_API_BASE_URL, alumni);
+        return axios.post(""+USER_API_BASE_URL+'user/register', alumni);
     }
 
     loginUser(alumni) {
-        return axios.post(""+USER_API_BASE_URL, alumni);
+        return axios.post(""+USER_API_BASE_URL+'user/login', alumni);
     }
 
-    addJobs(job){
-        return axios.post(""+USER_API_BASE_URL, job);
+    addJobs(job,alumni_id){
+        return axios.post(""+USER_API_BASE_URL+`alumini/myupdates/${alumni_id}`, job);
+    }
+
+    addEvents(event){
+        return axios.post(""+USER_API_BASE_URL, event);//remaining
     }
 
     fetchJobs() {
-        return axios.get(USER_API_BASE_URL);
+        return axios.get(USER_API_BASE_URL+'alumini/updates');
+    }
+
+    fetchEvents() {
+        return axios.get(USER_API_BASE_URL+'alumini/events');
     }
 
     fetchJobsById(alumniId) {

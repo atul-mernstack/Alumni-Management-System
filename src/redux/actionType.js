@@ -1,4 +1,5 @@
 const USERNAME='USERNAME';
 const ISADMIN='ISADMIN';
+const ALUMNIID='ALUMNIID';
 
-export default{USERNAME,ISADMIN};
+export default{USERNAME,ISADMIN,ALUMNIID};

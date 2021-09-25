@@ -1,8 +1,7 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 
-
+import ApiService from '../../service/ApiService';
 const Events=()=>{
-    const [eventsId, setEventsId]=useState('');
     const [eventsName, setEventsName]=useState('');
     const [eventsDescription,setEventsDescription]=useState('');
     const [eventsDate, setEventsDate]=useState('');
@@ -10,11 +9,43 @@ const Events=()=>{
     const [msg,setMsg]=useState(false);
     const [events, setEvents]=useState([1,2,3,4,5]);
 
-    const deleteHandler=(eventsId)=>{
+    useEffect(()=>{
+        console.log("event1 : "+events);
+        ApiService.fetchEvents()
+            .then(resp => {
+                console.log("jobs : "+resp.data);//actual response data sent by back end
+                setEvents([resp.data]);
+            }).catch(err => {
+                //  console.error(err);
+                console.error("in err ", err.response.data);
+                //err.response.data => DTO on the server side : ErrorResponse
+                alert(err.response.data.message);             
+                //history.push('register');
+            })
+    },[]);
+
+    const deleteEventHandler=(eventsId)=>{
         //api call
     }
 
-    const isDisabled=()=>eventsId.trim().length===0||eventsName.trim().length()===0||eventsDescription.trim().length===0;
+    const addEventHandler=(e)=>{
+        e.preventDefault();
+        let events={eventName:eventsName, description:eventsDescription, date:eventsDate};
+        ApiService.addEvents(events)
+        .then(resp => {
+            console.log(resp.data);//actual response data sent by back end
+            setEvents([...events,resp.data]);
+            //history.push('/');
+        }).catch(err => {
+            //  console.error(err);
+            console.error("in err ", err.response.data);
+            //err.response.data => DTO on the server side : ErrorResponse
+            alert(err.response.data.message);             
+            //history.push('register');
+        })
+    }
+
+    const isDisabled=()=>eventsName.trim().length===0||eventsDescription.trim().length===0;
     return(
         <>
         <div className="container-fluid mt-3">
@@ -25,37 +56,35 @@ const Events=()=>{
                             <div className="row">
                                 <div className="col-md-6">
                                     <div className="form-group">
-                                    <label htmlFor="EventsId" className="form-label">Events Id<span style={{color:"red"}}>*</span></label>
-                                        <input type="text" className="form-control " id="EventsId" onChange={e=>setEventsId(e.target.value)} value={eventsId} placeholder="Events Id"/>
-                                        
+                                    <label htmlFor="EventsName" className="form-label">Events Name<span style={{color:"red"}}>*</span></label>
+                                        <input type="text" className="form-control " id="EventsName" onChange={e=>setEventsName(e.target.value)} value={eventsName} placeholder="Events Name"/> 
                                     </div>
                                     </div>
                                     <div className="col-md-6">
                                     <div className="form-group">
-                                    <label htmlFor="EventsName" className="form-label">Events Name<span style={{color:"red"}}>*</span></label>
-                                        <input type="text" className="form-control " id="EventsName" onChange={e=>setEventsName(e.target.value)} value={eventsName} placeholder="Events Name"/>
+                                    <label htmlFor="EventsDate" className="form-label">Events Date<span style={{color:"red"}}>*</span></label>
+                                        <input type="date" className="form-control " id="EventsDate" onChange={e=>setEventsDate(e.target.value)} value={eventsDate} placeholder="Events Description"/>
                                     </div>
                                     </div>
                                     </div>
                                     <div className="row">
                                 <div className="col-md-6">
                                     <div className="form-group">
-                                    <label htmlFor="EventsDate" className="form-label">Events Date<span style={{color:"red"}}>*</span></label>
-                                        <input type="date" className="form-control " id="EventsDate" onChange={e=>setEventsDate(e.target.value)} value={eventsDate} placeholder="Events Description"/>
+                                    <label htmlFor="EventsDescription" className="form-label">Events Description<span style={{color:"red"}}>*</span></label>
+                                        <textarea type="text" className="form-control " id="EventsDescription" onChange={e=>setEventsDescription(e.target.value)} value={eventsDescription} placeholder="Events Description"/>
                                         
                                     </div>
                                     </div>
                                     <div className="col-md-6">
                                     <div className="form-group">
-                                    <label htmlFor="EventsDescription" className="form-label">Events Description<span style={{color:"red"}}>*</span></label>
-                                        <textarea type="text" className="form-control " id="EventsDescription" onChange={e=>setEventsDescription(e.target.value)} value={eventsDescription} placeholder="Events Description"/>
+                                    
                                     </div>
                                     </div>
                                     </div>
                                    
                                     
                                 <div className="d-grid gap-2 d-md-flex justify-content-md-start mt-3">
-                                <button type="button" className="btn btn-danger mt-1" disabled={isDisabled()}>Add New Events</button>
+                                <button type="button" className="btn btn-danger mt-1" disabled={isDisabled()} onClick={addEventHandler}>Add New Events</button>
                                 
                             </div>
                             {/* <span>Sign Up Successfull! , for sign in please <Link to="/">click here to login</Link></span> */}
@@ -89,7 +118,7 @@ const Events=()=>{
                                         <td></td>
                                         <td></td>
                                         <td></td>
-                                        <td><td><button type="button" className="btn btn-light" onClick={e=>deleteHandler(123)}>Delete</button></td></td>
+                                        <td><td><button type="button" className="btn btn-light" onClick={e=>deleteEventHandler(123)}>Delete</button></td></td>
                                     </tr>
                                         );
                                     }

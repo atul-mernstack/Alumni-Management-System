@@ -1,4 +1,8 @@
 import { useState } from 'react';
+import {useHistory } from 'react-router-dom';
+
+import ApiService from "../../service/ApiService";
+
 const Register = () => {
     const [fName, setFName] = useState('');
     const [lName, setLName] = useState('');
@@ -10,7 +14,7 @@ const Register = () => {
     const [course, setCurse] = useState('');
     //const [courseDuration, setCourseDuration] = useState('');
     const [passingYear, setPassingYear] = useState('');
-    const [role, setRole] = useState('Alumni');
+    const [role, setRole] = useState('ALUMINI');
     const [city, setCity] = useState('');
     const [state, setState] = useState('');
     const [country, setCountry] = useState('');
@@ -20,11 +24,33 @@ const Register = () => {
     const [error, setError] = useState(0);
     //const [notMatch, setNotmatch] = useState(false);
     const [msg, setMsg] = useState(false);
+    let history=useHistory();
+
+    const fullDate=()=>{
+        let date=new Date();
+        let year=date.getFullYear();
+        let month=date.getMonth();
+        let day=date.getDate();
+        let fullDate=year+"-"+month+"-"+day;
+        return fullDate;
+    }
 
     const signUpHandler = (e) => {
-        e.preventDefault();
-        let alumni={fName:fName,lName:lName,userName:userName,email:email,mobile:mobile,address:address,course:course,
-        passingYear:passingYear,role:role,city:city,state:state,country:country,date:new Date().toDateString(),password:password};
+        e.preventDefault();       
+        console.log("fulldate : "+fullDate());
+        let alumni={firstName:fName,lastName:lName,email:email,userName:userName,mobileNo:mobile,password:password,
+        passingYear:passingYear,role:role,course:{courseName:course}};
+        ApiService.addUser(alumni)
+            .then(resp => {
+                console.log(resp.data);//actual response data sent by back end                
+                history.push('login');
+            }).catch(err => {
+                //  console.error(err);
+                console.error("in err ", err.response.data);
+                //err.response.data => DTO on the server side : ErrorResponse
+                alert(err.response.data.message);             
+                history.push('register');
+            })
     }
 
     const isDisabled = () => lName.trim().length === 0 || lName.trim().length === 0 || email.trim().length === 0 || password.trim().length === 0 ||
