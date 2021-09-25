@@ -9,8 +9,7 @@ const Events=()=>{
          ApiService.fetchEvents()
              .then(resp => {
                 console.log("events : "+resp.data);//actual response data sent by back end
-                 //this.setState({message : 'User added successfully.'});
-                 //this.props.history.push('/users');
+                 
                 setEvents([resp.data]);
              }).catch(err => {
                  //  console.error(err);
